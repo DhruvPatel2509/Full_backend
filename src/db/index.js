@@ -1,15 +1,26 @@
 import mongoose from "mongoose";
-
 import { DB_NAME } from "../constants.js";
 
- const connectDB =async ()=>{
-try {
-    const connectioninstance =  await mongoose.connect(`${process.env.MONGODB_URL}/${DB_NAME}`)
-    console.log(`Connected To Database ${connectioninstance.connection.host}`);
-} catch (error) {
-    console.log(`Error while connecting DB ${error}`);
-    process.exit(1)
-}
-}
+const connectDB = async () => {
+  try {
+   
 
-export default connectDB
+    // Construct the URI
+    const uri = `${process.env.MONGODB_URL}/${DB_NAME}`;
+    if (!process.env.MONGODB_URL || !DB_NAME) {
+      throw new Error("MONGODB_URL or DB_NAME environment variable is not defined.");
+    }
+
+    // Connect to MongoDB
+    const connectionInstance = await mongoose.connect(uri);
+
+    // Log connection information
+    console.log(`Connected to Database: ${connectionInstance.connection.host}`);
+  } catch (error) {
+    // Log errors and exit process with failure code
+    console.error(`Error while connecting to DB: ${error.message}`);
+    process.exit(1);
+  }
+};
+
+export default connectDB;
